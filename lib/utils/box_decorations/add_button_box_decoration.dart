@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:budgetful/utils/constants.dart';
 
-class AddButtonBoxDecoration extends StatelessWidget {
-  const AddButtonBoxDecoration({
+class ButtonBoxDecoration extends StatelessWidget {
+  const ButtonBoxDecoration({
     Key? key,
     required this.label,
   }) : super(key: key);

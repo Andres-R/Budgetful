@@ -1,3 +1,4 @@
+import 'package:budgetful/screens/budgeting/delete_expense_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:budgetful/cubit/screen_total_budget_limit_cubit.dart';
@@ -228,7 +229,7 @@ class _MonthlyExpenseScreenState extends State<MonthlyExpenseScreen> {
                                               ExpenseCardState>(
                                             listener: (_, state) {
                                               if (state
-                                                  .expenseCardHasBeenAdded) {
+                                                  .expenseCardHasBeenEdited) {
                                                 _totalSpentCubit
                                                     .updateTotalSpent();
                                               }
@@ -277,7 +278,7 @@ class _MonthlyExpenseScreenState extends State<MonthlyExpenseScreen> {
                                               ExpenseCardState>(
                                             listener: (_, state) {
                                               if (state
-                                                  .expenseCardHasBeenAdded) {
+                                                  .expenseCardHasBeenEdited) {
                                                 _totalSpentCubit
                                                     .updateTotalSpent();
                                               }
@@ -328,7 +329,7 @@ class _MonthlyExpenseScreenState extends State<MonthlyExpenseScreen> {
                             ),
                           );
                         },
-                        child: const AddButtonBoxDecoration(
+                        child: const ButtonBoxDecoration(
                           label: "Add Budget",
                         ),
                       ),
@@ -339,7 +340,7 @@ class _MonthlyExpenseScreenState extends State<MonthlyExpenseScreen> {
                   builder: (_, budgetCardState) {
                     return BlocConsumer<ExpenseCardCubit, ExpenseCardState>(
                       listener: (_, state) {
-                        if (state.expenseCardHasBeenAdded) {
+                        if (state.expenseCardHasBeenEdited) {
                           _budgetCardCubit.updateBudgetCards();
                         }
                       },
@@ -372,8 +373,6 @@ class _MonthlyExpenseScreenState extends State<MonthlyExpenseScreen> {
                     );
                   },
                 ),
-                // This BlocBuilder may be unnecessary and may affect performance
-                // but is implemented like other BlocBuilders so logically valid
                 BlocBuilder<BudgetCardCubit, BudgetCardState>(
                   builder: (_, state) {
                     return Padding(
@@ -414,31 +413,68 @@ class _MonthlyExpenseScreenState extends State<MonthlyExpenseScreen> {
                               ),
                             ],
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              if (state.budgetCards.isEmpty) {
-                                showCustomErrorDialog(context,
-                                    "Must create a budget before adding an expense!");
-                              } else {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) {
-                                      return BlocProvider.value(
-                                        value: _expenseCardCubit,
-                                        child: CreateExpenseCardScreen(
-                                          userID: widget.userID,
-                                          screenID: widget.screenID,
-                                          budgets: state.budgetCards,
-                                        ),
-                                      );
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              BlocBuilder<ExpenseCardCubit, ExpenseCardState>(
+                                builder: (_, expenseState) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      if (expenseState.expenseCards.isEmpty) {
+                                        showCustomErrorDialog(context,
+                                            "Must create an expense before deleting an expense!");
+                                      } else {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (_) {
+                                              return BlocProvider.value(
+                                                value: _expenseCardCubit,
+                                                child: DeleteExpenseScreen(
+                                                  userID: widget.userID,
+                                                  screenID: widget.screenID,
+                                                  expenses:
+                                                      expenseState.expenseCards,
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      }
                                     },
-                                  ),
-                                );
-                              }
-                            },
-                            child: const AddButtonBoxDecoration(
-                              label: "Add Expense",
-                            ),
+                                    child: const ButtonBoxDecoration(
+                                      label: "Delete",
+                                    ),
+                                  );
+                                },
+                              ),
+                              const SizedBox(width: 16),
+                              GestureDetector(
+                                onTap: () {
+                                  if (state.budgetCards.isEmpty) {
+                                    showCustomErrorDialog(context,
+                                        "Must create a budget before adding an expense!");
+                                  } else {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) {
+                                          return BlocProvider.value(
+                                            value: _expenseCardCubit,
+                                            child: CreateExpenseCardScreen(
+                                              userID: widget.userID,
+                                              screenID: widget.screenID,
+                                              budgets: state.budgetCards,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: const ButtonBoxDecoration(
+                                  label: "Add",
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

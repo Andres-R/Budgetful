@@ -9,7 +9,7 @@ class ExpenseCardCubit extends Cubit<ExpenseCardState> {
     required this.userID,
     required this.screenID,
   }) : super(const ExpenseCardState(
-            expenseCards: [], expenseCardHasBeenAdded: false)) {
+            expenseCards: [], expenseCardHasBeenEdited: false)) {
     initializeExpenseCards();
   }
 
@@ -20,7 +20,7 @@ class ExpenseCardCubit extends Cubit<ExpenseCardState> {
   void initializeExpenseCards() async {
     List<Map<String, dynamic>> list =
         await dbController.getAllExpenseCards(userID, screenID);
-    emit(ExpenseCardState(expenseCards: list, expenseCardHasBeenAdded: false));
+    emit(ExpenseCardState(expenseCards: list, expenseCardHasBeenEdited: false));
   }
 
   void addExpenseCard(String expenseDescription, double expenseAmount,
@@ -30,18 +30,27 @@ class ExpenseCardCubit extends Cubit<ExpenseCardState> {
     await dbController.updateSpentForBudget(userID, screenID, budget);
     List<Map<String, dynamic>> list =
         await dbController.getAllExpenseCards(userID, screenID);
-    emit(ExpenseCardState(expenseCards: list, expenseCardHasBeenAdded: true));
+    emit(ExpenseCardState(expenseCards: list, expenseCardHasBeenEdited: true));
+  }
+
+  void deleteExpenseCard(
+      int id, String budget, int userID, int screenID) async {
+    await dbController.deleteExpenseCard(id);
+    await dbController.updateSpentForBudget(userID, screenID, budget);
+    List<Map<String, dynamic>> list =
+        await dbController.getAllExpenseCards(userID, screenID);
+    emit(ExpenseCardState(expenseCards: list, expenseCardHasBeenEdited: true));
   }
 
   void update() async {
     List<Map<String, dynamic>> list =
         await dbController.getAllExpenseCards(userID, screenID);
-    emit(ExpenseCardState(expenseCards: list, expenseCardHasBeenAdded: false));
+    emit(ExpenseCardState(expenseCards: list, expenseCardHasBeenEdited: false));
   }
 
   void filterByBudget(int userID, int screenID, String budget) async {
     List<Map<String, dynamic>> list =
         await dbController.filterExpensesByBudget(userID, screenID, budget);
-    emit(ExpenseCardState(expenseCards: list, expenseCardHasBeenAdded: false));
+    emit(ExpenseCardState(expenseCards: list, expenseCardHasBeenEdited: false));
   }
 }

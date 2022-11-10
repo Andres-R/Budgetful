@@ -148,7 +148,7 @@ class _CreateExpenseCardScreenState extends State<CreateExpenseCardScreen> {
         String finalExpenseDate =
             '${year.toString()}-$monthFormatted-$dayFormatted';
 
-        // changes expenseCardHasBeenAdded to true
+        // changes expenseCardHasBeenEdited to true
         BlocProvider.of<ExpenseCardCubit>(context).addExpenseCard(
           finalDescription,
           finalCost,
@@ -158,7 +158,7 @@ class _CreateExpenseCardScreenState extends State<CreateExpenseCardScreen> {
           widget.screenID,
         );
 
-        // changes expenseCardHasBeenAdded back to false
+        // changes expenseCardHasBeenEdited back to false
         BlocProvider.of<ExpenseCardCubit>(context).update();
 
         Navigator.of(context).pop();
@@ -280,7 +280,7 @@ class _CreateExpenseCardScreenState extends State<CreateExpenseCardScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 16),
                       Text(
                         'After creating this expense, you will be able to see it in a list within your monthly expenses.',
                         style: TextStyle(

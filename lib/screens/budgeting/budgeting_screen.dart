@@ -264,7 +264,7 @@ class _BudgetingScreenState extends State<BudgetingScreen> {
                                 ),
                               );
                             },
-                            child: const AddButtonBoxDecoration(
+                            child: const ButtonBoxDecoration(
                               label: "Add Month",
                             ),
                           ),
