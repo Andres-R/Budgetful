@@ -585,7 +585,7 @@ class DatabaseController {
     return delete;
   }
 
-  // works? [notyettested]
+  // works? [yes]
   Future<int> deleteExpenseCard(int id) async {
     var dbClient = await db;
     var delete = await dbClient.rawDelete(
@@ -593,5 +593,20 @@ class DatabaseController {
       [id],
     );
     return delete;
+  }
+
+  // works? [yes]
+  Future<bool> checkForMonthlyExpenseCard(
+      String month, int year, int userID) async {
+    var dbClient = await db;
+    var response = await dbClient.rawQuery(
+      "SELECT * FROM MonthlyExpenseCard WHERE MonthlyExpenseCard.cardMonth = ? AND MonthlyExpenseCard.cardYear = ? AND MonthlyExpenseCard.userID = ?;",
+      [month, year, userID],
+    );
+    if (response.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

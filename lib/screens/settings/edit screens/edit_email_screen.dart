@@ -58,6 +58,9 @@ class _EditEmailScreenState extends State<EditEmailScreen> {
         blocProvider.updateUserEmail(email, widget.userID);
         navigator.pop();
       } else {
+        if (!mounted) {
+          return;
+        }
         showCustomErrorDialog(context, "Email entered is already taken");
       }
     }

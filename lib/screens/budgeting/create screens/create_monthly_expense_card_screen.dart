@@ -1,3 +1,4 @@
+import 'package:budgetful/database/database_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:budgetful/cubit/monthly_expense_card_cubit.dart';
@@ -22,6 +23,7 @@ class CreateMonthlyExpenseCardScreen extends StatefulWidget {
 
 class _CreateMonthlyExpenseCardScreenState
     extends State<CreateMonthlyExpenseCardScreen> {
+  DatabaseController dbController = DatabaseController();
   final TextEditingController _checkAmountController = TextEditingController();
 
   String selectedMonth = "No month selected";
@@ -63,7 +65,7 @@ class _CreateMonthlyExpenseCardScreenState
     return "No month selected";
   }
 
-  void createMonthlyExpenseCard() {
+  void createMonthlyExpenseCard() async {
     // String month = _monthController.text;
     String checkAmount = _checkAmountController.text;
 
@@ -80,10 +82,26 @@ class _CreateMonthlyExpenseCardScreenState
       double cardCheck = double.parse(removeCommas(checkAmount));
       int cardYear = int.parse(DateTime.now().year.toString());
 
-      BlocProvider.of<MonthlyExpenseCardCubit>(context).addMonthlyExpenseCard(
-          selectedMonth, cardYear, cardCheck, widget.userID);
+      final navigator = Navigator.of(context);
+      final blocProvider = BlocProvider.of<MonthlyExpenseCardCubit>(context);
 
-      Navigator.of(context).pop();
+      bool monthExists = await dbController.checkForMonthlyExpenseCard(
+        selectedMonth,
+        cardYear,
+        widget.userID,
+      );
+
+      if (!monthExists) {
+        blocProvider.addMonthlyExpenseCard(
+            selectedMonth, cardYear, cardCheck, widget.userID);
+        navigator.pop();
+      } else {
+        if (!mounted) {
+          return;
+        }
+        showCustomErrorDialog(
+            context, "$selectedMonth $cardYear is already in your history");
+      }
     }
   }
 
