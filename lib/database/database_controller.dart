@@ -609,4 +609,14 @@ class DatabaseController {
       return true;
     }
   }
+
+  // works? [not yet tested]
+  Future<int> updateBudgetLimit(double budgetLimit, int cardID) async {
+    var dbClient = await db;
+    var update = await dbClient.rawUpdate(
+      "UPDATE BudgetCard SET budgetLimit = ? WHERE budgetCardID = ?;",
+      [budgetLimit, cardID],
+    );
+    return update;
+  }
 }

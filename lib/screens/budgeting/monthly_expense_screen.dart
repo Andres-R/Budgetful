@@ -1,4 +1,5 @@
 import 'package:budgetful/screens/budgeting/delete_expense_screen.dart';
+import 'package:budgetful/screens/budgeting/edit_budget_card_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:budgetful/cubit/screen_total_budget_limit_cubit.dart';
@@ -179,7 +180,7 @@ class _MonthlyExpenseScreenState extends State<MonthlyExpenseScreen> {
                                               BudgetCardState>(
                                             listener: (_, state) {
                                               if (state
-                                                  .budgetCardHasBeenAdded) {
+                                                  .budgetCardHasBeenEdited) {
                                                 _totalBudgetLimitCubit
                                                     .updateTotalBudgetLimit();
                                               }
@@ -312,7 +313,50 @@ class _MonthlyExpenseScreenState extends State<MonthlyExpenseScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const SectionTitle(title: "Budgets"),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const SectionTitle(title: "Budgets"),
+                          const SizedBox(width: 10),
+                          BlocBuilder<BudgetCardCubit, BudgetCardState>(
+                            builder: (_, state) {
+                              return GestureDetector(
+                                onTap: () {
+                                  if (state.budgetCards.isEmpty) {
+                                    showCustomErrorDialog(context,
+                                        "Must create a budget first before editing budgets!");
+                                  } else {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (_) {
+                                          return BlocProvider.value(
+                                            value: _budgetCardCubit,
+                                            child: EditBudgetCardScreen(
+                                              userID: widget.userID,
+                                              screenID: widget.screenID,
+                                              budgetCards: state.budgetCards,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Container(
+                                  color: kMainBGColor,
+                                  child: Text(
+                                    'edit',
+                                    style: TextStyle(
+                                      color: kAccentColor,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                       GestureDetector(
                         onTap: () {
                           Navigator.of(context).push(
@@ -403,11 +447,14 @@ class _MonthlyExpenseScreenState extends State<MonthlyExpenseScreen> {
                                     );
                                   }
                                 },
-                                child: Text(
-                                  'filter',
-                                  style: TextStyle(
-                                    color: kAccentColor,
-                                    fontSize: 20,
+                                child: Container(
+                                  color: kMainBGColor,
+                                  child: Text(
+                                    'filter',
+                                    style: TextStyle(
+                                      color: kAccentColor,
+                                      fontSize: 20,
+                                    ),
                                   ),
                                 ),
                               ),

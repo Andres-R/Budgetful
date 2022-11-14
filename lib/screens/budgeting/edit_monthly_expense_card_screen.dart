@@ -286,7 +286,11 @@ class _EditMonthlyExpenseCardScreenState
                   ],
                 ),
               ),
-              (amountToBeAdded != 0 && selectedMonthCardID != -1)
+              (amountToBeAdded != 0 &&
+                      selectedMonthCardID != -1 &&
+                      amountToBeAdded > 0 &&
+                      numberFormat.format(amountToBeAdded).length <
+                          monthCheckLimit)
                   ? MonthlyExpenseCard(
                       cardMonth: getCardMonth(),
                       cardYear: int.parse(getCardYear()),

@@ -45,11 +45,11 @@ class _CreateBudgetCardScreenState extends State<CreateBudgetCardScreen> {
       String finalBudget = capitalizeFirstLetter(budget);
       double finalLimit = double.parse(removeCommas(limit));
 
-      // changes budgetCardHasBeenAdded to true
+      // changes budgetCardHasBeenEdited to true
       BlocProvider.of<BudgetCardCubit>(context).addBudgetCard(
           finalBudget, finalLimit, 0.0, widget.userID, widget.screenID);
 
-      // changes budgetCardHasBeenAdded back to false
+      // changes budgetCardHasBeenEdited back to false
       BlocProvider.of<BudgetCardCubit>(context).updateBudgetCards();
 
       Navigator.of(context).pop();

@@ -9,7 +9,7 @@ class BudgetCardCubit extends Cubit<BudgetCardState> {
     required this.userID,
     required this.screenID,
   }) : super(const BudgetCardState(
-            budgetCards: [], budgetCardHasBeenAdded: false)) {
+            budgetCards: [], budgetCardHasBeenEdited: false)) {
     initializeBudgetCards();
   }
 
@@ -20,7 +20,7 @@ class BudgetCardCubit extends Cubit<BudgetCardState> {
   void initializeBudgetCards() async {
     List<Map<String, dynamic>> list =
         await dbController.getAllBudgetCards(userID, screenID);
-    emit(BudgetCardState(budgetCards: list, budgetCardHasBeenAdded: false));
+    emit(BudgetCardState(budgetCards: list, budgetCardHasBeenEdited: false));
   }
 
   void addBudgetCard(String budgetName, double budgetLimit, double spent,
@@ -29,12 +29,20 @@ class BudgetCardCubit extends Cubit<BudgetCardState> {
         budgetName, budgetLimit, spent, userID, screenID);
     List<Map<String, dynamic>> list =
         await dbController.getAllBudgetCards(userID, screenID);
-    emit(BudgetCardState(budgetCards: list, budgetCardHasBeenAdded: true));
+    emit(BudgetCardState(budgetCards: list, budgetCardHasBeenEdited: true));
   }
 
   void updateBudgetCards() async {
     List<Map<String, dynamic>> list =
         await dbController.getAllBudgetCards(userID, screenID);
-    emit(BudgetCardState(budgetCards: list, budgetCardHasBeenAdded: false));
+    emit(BudgetCardState(budgetCards: list, budgetCardHasBeenEdited: false));
+  }
+
+  void updateBudgetLimit(
+      double newLimit, int cardID, int userID, int screenID) async {
+    await dbController.updateBudgetLimit(newLimit, cardID);
+    List<Map<String, dynamic>> list =
+        await dbController.getAllBudgetCards(userID, screenID);
+    emit(BudgetCardState(budgetCards: list, budgetCardHasBeenEdited: true));
   }
 }
