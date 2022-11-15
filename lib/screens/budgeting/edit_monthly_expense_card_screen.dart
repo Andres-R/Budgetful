@@ -25,6 +25,7 @@ class EditMonthlyExpenseCardScreen extends StatefulWidget {
 
 class _EditMonthlyExpenseCardScreenState
     extends State<EditMonthlyExpenseCardScreen> {
+  FocusNode numberFocusNode = FocusNode();
   final TextEditingController _addCheckController = TextEditingController();
 
   int selectedMonthCardID = -1;
@@ -39,7 +40,23 @@ class _EditMonthlyExpenseCardScreenState
         return false;
       },
     );
+    numberFocusNode.addListener(
+      () {
+        bool hasFocus = numberFocusNode.hasFocus;
+        if (hasFocus) {
+          KeyboardOverlay.showOverlay(context);
+        } else {
+          KeyboardOverlay.removeOverlay();
+        }
+      },
+    );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    numberFocusNode.dispose();
+    super.dispose();
   }
 
   int getMonthCardID() {
@@ -244,8 +261,10 @@ class _EditMonthlyExpenseCardScreenState
                   hint: "Enter amount to add to month",
                   icon: Icons.money,
                   obscureText: false,
-                  inputType: const TextInputType.numberWithOptions(),
+                  inputType: TextInputType.number,
                   enableCurrencyMode: true,
+                  next: false,
+                  focusNode: numberFocusNode,
                 ),
               ),
               Padding(

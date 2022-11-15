@@ -27,6 +27,8 @@ class EditBudgetCardScreen extends StatefulWidget {
 class _EditBudgetCardScreenState extends State<EditBudgetCardScreen> {
   final TextEditingController _addLimitController = TextEditingController();
 
+  final FocusNode numberFocusNode = FocusNode();
+
   int selectedBudgetCardID = -1;
   double amountToBeAdded = 0.0;
   late List<bool> cardOption;
@@ -39,7 +41,23 @@ class _EditBudgetCardScreenState extends State<EditBudgetCardScreen> {
         return false;
       },
     );
+    numberFocusNode.addListener(
+      () {
+        bool hasFocus = numberFocusNode.hasFocus;
+        if (hasFocus) {
+          KeyboardOverlay.showOverlay(context);
+        } else {
+          KeyboardOverlay.removeOverlay();
+        }
+      },
+    );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    numberFocusNode.dispose();
+    super.dispose();
   }
 
   int getBudgetCardID() {
@@ -219,8 +237,10 @@ class _EditBudgetCardScreenState extends State<EditBudgetCardScreen> {
                   hint: "Enter amount to add to limit",
                   icon: Icons.money,
                   obscureText: false,
-                  inputType: const TextInputType.numberWithOptions(),
+                  inputType: TextInputType.number,
                   enableCurrencyMode: true,
+                  next: false,
+                  focusNode: numberFocusNode,
                 ),
               ),
               Padding(

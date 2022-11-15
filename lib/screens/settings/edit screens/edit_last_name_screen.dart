@@ -107,6 +107,8 @@ class _EditLastNameScreenState extends State<EditLastNameScreen> {
                   obscureText: false,
                   inputType: TextInputType.text,
                   enableCurrencyMode: false,
+                  next: true,
+                  focusNode: null,
                 ),
               ),
               Padding(
@@ -118,6 +120,8 @@ class _EditLastNameScreenState extends State<EditLastNameScreen> {
                   obscureText: false,
                   inputType: TextInputType.text,
                   enableCurrencyMode: false,
+                  next: false,
+                  focusNode: null,
                 ),
               ),
               Padding(

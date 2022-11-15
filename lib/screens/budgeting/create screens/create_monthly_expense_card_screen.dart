@@ -1,4 +1,5 @@
 import 'package:budgetful/database/database_controller.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:budgetful/cubit/monthly_expense_card_cubit.dart';
@@ -24,6 +25,7 @@ class CreateMonthlyExpenseCardScreen extends StatefulWidget {
 class _CreateMonthlyExpenseCardScreenState
     extends State<CreateMonthlyExpenseCardScreen> {
   DatabaseController dbController = DatabaseController();
+  final FocusNode numberFocusNode = FocusNode();
   final TextEditingController _checkAmountController = TextEditingController();
 
   String selectedMonth = "No month selected";
@@ -53,7 +55,23 @@ class _CreateMonthlyExpenseCardScreenState
         return false;
       },
     );
+    numberFocusNode.addListener(
+      () {
+        bool hasFocus = numberFocusNode.hasFocus;
+        if (hasFocus) {
+          KeyboardOverlay.showOverlay(context);
+        } else {
+          KeyboardOverlay.removeOverlay();
+        }
+      },
+    );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    numberFocusNode.dispose();
+    super.dispose();
   }
 
   String getMonth() {
@@ -217,8 +235,10 @@ class _CreateMonthlyExpenseCardScreenState
                   hint: "Enter check amount",
                   icon: Icons.money,
                   obscureText: false,
-                  inputType: const TextInputType.numberWithOptions(),
+                  inputType: TextInputType.number,
                   enableCurrencyMode: true,
+                  next: false,
+                  focusNode: numberFocusNode,
                 ),
               ),
               Padding(

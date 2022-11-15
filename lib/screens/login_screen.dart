@@ -105,6 +105,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: false,
                   inputType: TextInputType.emailAddress,
                   enableCurrencyMode: false,
+                  next: true,
+                  focusNode: null,
                 ),
               ),
               Padding(
@@ -116,6 +118,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: true,
                   inputType: TextInputType.text,
                   enableCurrencyMode: false,
+                  next: false,
+                  focusNode: null,
                 ),
               ),
               Padding(

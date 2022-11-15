@@ -374,7 +374,7 @@ class _MonthlyExpenseScreenState extends State<MonthlyExpenseScreen> {
                           );
                         },
                         child: const ButtonBoxDecoration(
-                          label: "Add Budget",
+                          label: "Add",
                         ),
                       ),
                     ],

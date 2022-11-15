@@ -138,6 +138,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     obscureText: false,
                     inputType: TextInputType.text,
                     enableCurrencyMode: false,
+                    next: true,
+                    focusNode: null,
                   ),
                 ),
                 Padding(
@@ -149,6 +151,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     obscureText: false,
                     inputType: TextInputType.text,
                     enableCurrencyMode: false,
+                    next: true,
+                    focusNode: null,
                   ),
                 ),
                 Padding(
@@ -160,6 +164,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     obscureText: false,
                     inputType: TextInputType.emailAddress,
                     enableCurrencyMode: false,
+                    next: true,
+                    focusNode: null,
                   ),
                 ),
                 Padding(
@@ -171,6 +177,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     obscureText: false,
                     inputType: TextInputType.text,
                     enableCurrencyMode: false,
+                    next: true,
+                    focusNode: null,
                   ),
                 ),
                 Padding(
@@ -182,6 +190,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     obscureText: true,
                     inputType: TextInputType.text,
                     enableCurrencyMode: false,
+                    next: true,
+                    focusNode: null,
                   ),
                 ),
                 Padding(
@@ -193,6 +203,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     obscureText: true,
                     inputType: TextInputType.text,
                     enableCurrencyMode: false,
+                    next: false,
+                    focusNode: null,
                   ),
                 ),
                 Padding(

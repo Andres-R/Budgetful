@@ -29,6 +29,8 @@ class _CreateExpenseCardScreenState extends State<CreateExpenseCardScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _costController = TextEditingController();
 
+  final FocusNode numberFocusNode = FocusNode();
+
   String selectedBudget = "No budget selected";
   String selectedMonth = "No month selected";
   String selectedDay = "No day selected";
@@ -82,7 +84,23 @@ class _CreateExpenseCardScreenState extends State<CreateExpenseCardScreen> {
         return false;
       },
     );
+    numberFocusNode.addListener(
+      () {
+        bool hasFocus = numberFocusNode.hasFocus;
+        if (hasFocus) {
+          KeyboardOverlay.showOverlay(context);
+        } else {
+          KeyboardOverlay.removeOverlay();
+        }
+      },
+    );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    numberFocusNode.dispose();
+    super.dispose();
   }
 
   String getBudget() {
@@ -531,6 +549,8 @@ class _CreateExpenseCardScreenState extends State<CreateExpenseCardScreen> {
                   obscureText: false,
                   inputType: TextInputType.text,
                   enableCurrencyMode: false,
+                  next: true,
+                  focusNode: null,
                 ),
               ),
               Padding(
@@ -542,6 +562,8 @@ class _CreateExpenseCardScreenState extends State<CreateExpenseCardScreen> {
                   obscureText: false,
                   inputType: const TextInputType.numberWithOptions(),
                   enableCurrencyMode: true,
+                  next: false,
+                  focusNode: numberFocusNode,
                 ),
               ),
               Padding(

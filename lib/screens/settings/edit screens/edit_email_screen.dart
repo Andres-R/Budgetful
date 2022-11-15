@@ -125,6 +125,8 @@ class _EditEmailScreenState extends State<EditEmailScreen> {
                   obscureText: false,
                   inputType: TextInputType.emailAddress,
                   enableCurrencyMode: false,
+                  next: true,
+                  focusNode: null,
                 ),
               ),
               Padding(
@@ -136,6 +138,8 @@ class _EditEmailScreenState extends State<EditEmailScreen> {
                   obscureText: false,
                   inputType: TextInputType.emailAddress,
                   enableCurrencyMode: false,
+                  next: false,
+                  focusNode: null,
                 ),
               ),
               Padding(

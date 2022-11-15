@@ -153,6 +153,8 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
                   obscureText: true,
                   inputType: TextInputType.text,
                   enableCurrencyMode: false,
+                  next: true,
+                  focusNode: null,
                 ),
               ),
               Padding(
@@ -164,6 +166,8 @@ class _EditPasswordScreenState extends State<EditPasswordScreen> {
                   obscureText: true,
                   inputType: TextInputType.text,
                   enableCurrencyMode: false,
+                  next: false,
+                  focusNode: null,
                 ),
               ),
               Padding(

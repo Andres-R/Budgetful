@@ -13,6 +13,8 @@ class CustomTextFormField extends StatelessWidget {
     required this.obscureText,
     required this.inputType,
     required this.enableCurrencyMode,
+    required this.next,
+    required this.focusNode,
   }) : super(key: key);
 
   final String hint;
@@ -21,6 +23,8 @@ class CustomTextFormField extends StatelessWidget {
   final TextInputType inputType;
   final bool obscureText;
   final bool enableCurrencyMode;
+  final bool next;
+  final FocusNode? focusNode;
 
   static const String _locale = 'en';
 
@@ -34,9 +38,10 @@ class CustomTextFormField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       keyboardType: inputType,
+      focusNode: focusNode,
       style: TextStyle(color: kTextColor),
       cursorColor: kTextColor,
-      textInputAction: TextInputAction.done,
+      textInputAction: next ? TextInputAction.next : TextInputAction.done,
       onSaved: (value) {
         controller.text = value!;
       },
@@ -79,5 +84,63 @@ class CustomTextFormField extends StatelessWidget {
             ]
           : [],
     );
+  }
+}
+
+class InputDoneView extends StatelessWidget {
+  const InputDoneView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      color: kKeyboard,
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: MaterialButton(
+          onPressed: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: Text(
+            "Done",
+            style: TextStyle(
+              color: kThemeColor,
+              fontSize: 16,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class KeyboardOverlay {
+  static OverlayEntry? _overlayEntry;
+
+  static showOverlay(BuildContext context) {
+    if (_overlayEntry != null) {
+      return;
+    }
+
+    OverlayState? overlayState = Overlay.of(context);
+    _overlayEntry = OverlayEntry(
+      builder: (context) {
+        return Positioned(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          right: 0.0,
+          left: 0.0,
+          child: const InputDoneView(),
+        );
+      },
+    );
+
+    overlayState!.insert(_overlayEntry!);
+  }
+
+  static removeOverlay() {
+    if (_overlayEntry != null) {
+      _overlayEntry!.remove();
+      _overlayEntry = null;
+    }
   }
 }

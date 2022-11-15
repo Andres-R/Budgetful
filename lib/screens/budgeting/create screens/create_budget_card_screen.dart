@@ -26,6 +26,29 @@ class _CreateBudgetCardScreenState extends State<CreateBudgetCardScreen> {
   final TextEditingController _budgetController = TextEditingController();
   final TextEditingController _limitController = TextEditingController();
 
+  final FocusNode numberFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    numberFocusNode.addListener(
+      () {
+        bool hasFocus = numberFocusNode.hasFocus;
+        if (hasFocus) {
+          KeyboardOverlay.showOverlay(context);
+        } else {
+          KeyboardOverlay.removeOverlay();
+        }
+      },
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    numberFocusNode.dispose();
+    super.dispose();
+  }
+
   void createBudgetCard() {
     String budget = _budgetController.text;
     String limit = _limitController.text;
@@ -131,6 +154,8 @@ class _CreateBudgetCardScreenState extends State<CreateBudgetCardScreen> {
                   obscureText: false,
                   inputType: TextInputType.text,
                   enableCurrencyMode: false,
+                  next: true,
+                  focusNode: null,
                 ),
               ),
               Padding(
@@ -142,6 +167,8 @@ class _CreateBudgetCardScreenState extends State<CreateBudgetCardScreen> {
                   obscureText: false,
                   inputType: const TextInputType.numberWithOptions(),
                   enableCurrencyMode: true,
+                  next: false,
+                  focusNode: numberFocusNode,
                 ),
               ),
               Padding(

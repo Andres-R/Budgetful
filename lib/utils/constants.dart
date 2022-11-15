@@ -21,6 +21,7 @@ Color kThemeColor = Colors.orange;
 Color kTextColor = Colors.white;
 Color kAccentColor = Colors.grey;
 Color kCurrencyColor = Colors.green;
+Color kKeyboard = const Color(0xFF363636);
 
 // Color kMainBGColor = Colors.black;
 // Color kDarkBGColor = Colors.purple; // Color.fromARGB(119, 230, 0, 230);
