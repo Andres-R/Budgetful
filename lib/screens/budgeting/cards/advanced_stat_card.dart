@@ -9,12 +9,14 @@ class AdvancedStatCard extends StatelessWidget {
     required this.check,
     required this.month,
     required this.year,
+    required this.budgets,
   }) : super(key: key);
 
   final double spent;
   final double check;
   final String month;
   final int year;
+  final List<Map<String, dynamic>> budgets;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class AdvancedStatCard extends StatelessWidget {
         horizontal: kPadding,
       ),
       child: Container(
-        height: 150,
+        //height: 150,
         decoration: BoxDecoration(
           color: kDarkBGColor,
           borderRadius: BorderRadius.all(
@@ -38,6 +40,7 @@ class AdvancedStatCard extends StatelessWidget {
           padding: EdgeInsets.all(kPadding),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,6 +86,74 @@ class AdvancedStatCard extends StatelessWidget {
                           color: spent > check ? Colors.red : kCurrencyColor,
                           fontWeight: FontWeight.bold,
                         ),
+                      ),
+                    ],
+                  ),
+                  // const SizedBox(height: 32),
+                  // Text(
+                  //   'Budget expenditures',
+                  //   style: TextStyle(
+                  //     color: kThemeColor,
+                  //     fontSize: 16,
+                  //   ),
+                  // ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ...List.generate(
+                        budgets.length,
+                        (index) {
+                          Map<String, dynamic> budgetInfo = budgets[index];
+                          return isBudgetLong(budgetInfo['budgetName'])
+                              ? SizedBox(
+                                  width: 140,
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'Swipe text left <- ',
+                                          style: TextStyle(
+                                            color: kAccentColor,
+                                          ),
+                                        ),
+                                        Text(
+                                          budgetInfo['budgetName'],
+                                          style: TextStyle(
+                                            color: kTextColor,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text(
+                                          '\$${numberFormat.format(budgetInfo['spent'])}',
+                                          style: TextStyle(
+                                            color: kCurrencyColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              : Row(
+                                  children: [
+                                    Text(
+                                      budgetInfo['budgetName'],
+                                      style: TextStyle(
+                                        color: kTextColor,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Text(
+                                      '\$${numberFormat.format(budgetInfo['spent'])}',
+                                      style: TextStyle(
+                                        color: kCurrencyColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                );
+                        },
                       ),
                     ],
                   ),
@@ -159,4 +230,12 @@ class AdvancedStatCard extends StatelessWidget {
       ),
     );
   }
+}
+
+bool isBudgetLong(String budget) {
+  if ((budget.length == budgetCharLimit) ||
+      ((budget.length + 1) == budgetCharLimit)) {
+    return true;
+  }
+  return false;
 }

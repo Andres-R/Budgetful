@@ -1,3 +1,4 @@
+import 'package:budgetful/cubit/advanced_budget_stats_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:budgetful/cubit/advanced_stats_cubit.dart';
@@ -19,18 +20,27 @@ class AdvancedStatsScreen extends StatefulWidget {
 
 class _AdvancedStatsScreenState extends State<AdvancedStatsScreen> {
   late AdvancedStatsCubit _advancedStatsCubit;
+  late AdvancedBudgetStatsCubit _advancedBudgets;
 
   @override
   void initState() {
     _advancedStatsCubit = AdvancedStatsCubit(userID: widget.userID);
+    _advancedBudgets = AdvancedBudgetStatsCubit(userID: widget.userID);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final numberFormat = NumberFormat.currency(locale: 'en_US', symbol: '');
-    return BlocProvider<AdvancedStatsCubit>(
-      create: (context) => _advancedStatsCubit,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AdvancedStatsCubit>(
+          create: (context) => _advancedStatsCubit,
+        ),
+        BlocProvider<AdvancedBudgetStatsCubit>(
+          create: (context) => _advancedBudgets,
+        ),
+      ],
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -193,22 +203,34 @@ class _AdvancedStatsScreenState extends State<AdvancedStatsScreen> {
                 ),
                 BlocBuilder<AdvancedStatsCubit, AdvancedStatsState>(
                   builder: (_, state) {
-                    return Column(
-                      children: [
-                        ...List.generate(
-                          state.advancedCards.length,
-                          (index) {
-                            Map<String, dynamic> card =
-                                state.advancedCards[index];
-                            return AdvancedStatCard(
-                              spent: card['Amount'].toDouble(),
-                              check: card['checkAmount'].toDouble(),
-                              month: card['cardMonth'],
-                              year: card['cardYear'],
-                            );
-                          },
-                        ),
-                      ],
+                    return BlocBuilder<AdvancedBudgetStatsCubit,
+                        AdvancedBudgetStatsState>(
+                      builder: (_, budgetsState) {
+                        return Column(
+                          children: [
+                            ...List.generate(
+                              state.advancedCards.length,
+                              (index) {
+                                Map<String, dynamic> card =
+                                    state.advancedCards[index];
+                                List<
+                                    Map<String,
+                                        dynamic>> budgetInfo = budgetsState
+                                            .advancedBudgets[
+                                        index][
+                                    '${card['cardMonth']} ${card['cardYear']}']!;
+                                return AdvancedStatCard(
+                                  spent: card['Amount'].toDouble(),
+                                  check: card['checkAmount'].toDouble(),
+                                  month: card['cardMonth'],
+                                  year: card['cardYear'],
+                                  budgets: budgetInfo,
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      },
                     );
                   },
                 ),

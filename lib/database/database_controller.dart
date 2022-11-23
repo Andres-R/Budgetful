@@ -1,3 +1,4 @@
+import 'package:budgetful/utils/number_to_month.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -363,6 +364,7 @@ class DatabaseController {
         }
       }
     }
+    output.sort(sortMonthCards);
     // print('');
     // for (Map<String, dynamic> map in response1) {
     //   print(map);
@@ -610,7 +612,7 @@ class DatabaseController {
     }
   }
 
-  // works? [not yet tested]
+  // works? [yes]
   Future<int> updateBudgetLimit(double budgetLimit, int cardID) async {
     var dbClient = await db;
     var update = await dbClient.rawUpdate(
@@ -618,5 +620,52 @@ class DatabaseController {
       [budgetLimit, cardID],
     );
     return update;
+  }
+
+  Future<List<Map<String, List<Map<String, dynamic>>>>>
+      getAllMonthBudgetSummaries(int userID) async {
+    var dbClient = await db;
+    var query1 = await dbClient.rawQuery(
+      "SELECT * FROM MonthlyExpenseCard WHERE MonthlyExpenseCard.userID = ?;",
+      [userID],
+    );
+
+    List<Map<String, dynamic>> sorted = [];
+    for (Map<String, dynamic> map in query1) {
+      sorted.add(map);
+    }
+    sorted.sort(sortMonthCards);
+
+    List<Map<String, List<Map<String, dynamic>>>> list = [];
+    for (int i = 0; i < sorted.length; i++) {
+      int screenID = sorted[i]['cardID'] as int;
+      var query2 = await dbClient.rawQuery(
+        "SELECT * FROM BudgetCard WHERE BudgetCard.userID = ? AND BudgetCard.screenID = ?;",
+        [userID, screenID],
+      );
+      String section =
+          '${sorted[i]['cardMonth']} ${sorted[i]['cardYear'].toString()}';
+      list.add({section: query2});
+    }
+    return list;
+  }
+
+  int sortMonthCards(
+    Map<String, dynamic> map1,
+    Map<String, dynamic> map2,
+  ) {
+    String month1 = monthToNumberWith0['${map1['cardMonth']}']!;
+    String month2 = monthToNumberWith0['${map2['cardMonth']}']!;
+    String year1 = map1['cardYear'].toString();
+    String year2 = map2['cardYear'].toString();
+    int date1 = int.parse('$year1$month1');
+    int date2 = int.parse('$year2$month2');
+    if (date1 > date2) {
+      return 1;
+    } else if (date2 > date1) {
+      return -1;
+    } else {
+      return 0;
+    }
   }
 }

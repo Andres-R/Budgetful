@@ -163,6 +163,10 @@ class _TestingState extends State<Testing> {
     // }
 
     // if (false) {
+    //   print(await dbController.getAllMonthBudgetSummaries(2));
+    // }
+
+    // if (false) {
     //   await dbController.deleteDB();
     //   print("Database deleted");
     // }
