@@ -97,6 +97,7 @@ class AdvancedStatCard extends StatelessWidget {
                   //     fontSize: 16,
                   //   ),
                   // ),
+                  const SizedBox(height: 8),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
